@@ -8,11 +8,10 @@ class Incident(Base):
     __tablename__ = 'incident'
     id = Column(Integer, primary_key=True, index=True)
     category = Column(String)
-    category = Column(String)
     severity = Column(String)
     description = Column(String)
-    latitude = Column(Float)
-    longitude = Column(Float)
+    location = Column(String)
+    phone_number = Column(String, default="")
     status = Column(String, default="PENDING")
+    image_url = Column(String, default=None)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    
