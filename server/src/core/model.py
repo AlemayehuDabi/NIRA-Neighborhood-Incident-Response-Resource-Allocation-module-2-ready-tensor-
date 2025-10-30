@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Enum
+from sqlalchemy import Column, Integer, String, DateTime, Enum, Float
 import datetime
 import enum
 
@@ -17,6 +17,8 @@ class Incident(Base):
     severity = Column(String)
     description = Column(String)
     location = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
     phone_number = Column(String, default="")
     status = Column(String, default="PENDING")
     image_url = Column(String, default=None)
