@@ -1,5 +1,6 @@
 from src.core.message_schema import AgentMessage as IncidentMessage
 from src.tools.geocode import GeoCodingTool
+
 class ReporterAgent:
     def __init__(self, orchestrator_send_function):
         """
