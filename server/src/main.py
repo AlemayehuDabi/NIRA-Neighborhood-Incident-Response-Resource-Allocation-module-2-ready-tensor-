@@ -1,8 +1,6 @@
 from fastapi import FastAPI
+from src.api.routes_incidents import router
 
 app = FastAPI()
 
-@app.get("/")
-
-def read_root():
-    return {"message": "NIVA(Module 2)"}
+app.include_router(router)
