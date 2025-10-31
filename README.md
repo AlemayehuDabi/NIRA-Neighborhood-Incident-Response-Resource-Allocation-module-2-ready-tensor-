@@ -76,7 +76,38 @@ NIRA integrates multiple tools to extend beyond simple LLM text reasoning:
 These metrics are automatically computed during replayed simulations using synthetic incident data.
 
 ---
-
+<pre>
+                Citizen / App / SMS
+                         |
+                 [Reporter Agent]
+                         |
+                 + normalize + geocode
+                         |
+                [Dedup / Similarity Node]
+                         |
+                 [Triage Agent]
+                         |
+                [Verification Supervisor]
+     ┌──────────┬─────────┬─────────┬─────────┐
+[Web Search] [Social] [Image] [Metadata] [Crowd/Local]
+     |          |         |         |         |
+        Evidence DB (S3 + Postgres + Vector)
+                         |
+                [Credibility Aggregator]
+          Bayesian truth score 0 → 1
+               /              \
+     below threshold      above threshold
+         |                     |
+ [Human Review]         [Dispatch Agent]
+                              |
+                        Send responders
+                              |
+                      [Monitoring + Feedback]
+                              |
+                         [Learning Agent]
+                 update source reliabilities
+</pre>
+---
 ## 🧪 Quick Start
 
 ### 1. Clone and Setup
