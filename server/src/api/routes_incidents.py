@@ -54,13 +54,6 @@ async def submit_sms_incident(data: IncidentSMSPayload):
     message = reporter.handle_incident(payload)
     return {"status": "received", "report_id": payload["id"], "payload": payload}
 
-# WhatsApp endpoint
-@router.post("/submit_whatsapp_incident")
-async def submit_whatsapp_incident(whatsapp_json: dict):
-    payload = adapt_whatsapp(whatsapp_json)
-    message = reporter.handle_incident(payload)
-    return {"status": "received", "report_id": payload["id"]}
-
 # Cloudinary 
 @router.post('/upload-image')
 async def upload_image(file: UploadFile= File(...)):
