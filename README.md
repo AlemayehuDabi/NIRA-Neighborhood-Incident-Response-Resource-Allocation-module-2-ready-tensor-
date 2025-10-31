@@ -76,6 +76,7 @@ NIRA integrates multiple tools to extend beyond simple LLM text reasoning:
 These metrics are automatically computed during replayed simulations using synthetic incident data.
 
 ---
+<pre>
                 Citizen / App / SMS
                          |
                  [Reporter Agent]
@@ -105,7 +106,7 @@ These metrics are automatically computed during replayed simulations using synth
                               |
                          [Learning Agent]
                  update source reliabilities
-
+</pre>
 ---
 ## 🧪 Quick Start
 
