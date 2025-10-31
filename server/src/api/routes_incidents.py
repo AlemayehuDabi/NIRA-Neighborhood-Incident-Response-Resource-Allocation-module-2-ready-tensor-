@@ -82,3 +82,8 @@ async def upload_image(file: UploadFile= File(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.delete("/delete-image/{public_id}")
+async def delete_image(public_id: str):
+    result = cloudinary.uploader.destroy(public_id)
+    return {"result": result}
