@@ -4,15 +4,18 @@ from src.tools.registry import ToolRegistry
 from src.llm.google_llm import llm_tool 
 from asyncio import TimeoutError
 import asyncio
+from src.agents.aggregator_agent import AggregatorAgent
+from src.core.message_schema import AgentMessage
+
 
 class ToolExecutionError(Exception):
     pass
 
 class TriageAgent:
-    def __init__(self, tool_registry: ToolRegistry, aggregator):
+    def __init__(self, tool_registry: ToolRegistry):
         self.llm = llm_tool() 
         self.tools = tool_registry
-        self.aggregator = aggregator
+        self.aggregator = AggregatorAgent()
 
     async def classify_incident(self, incident: Dict) -> Dict:
         prompt = f"""
@@ -61,7 +64,14 @@ class TriageAgent:
             raise ToolExecutionError(f"Tool not found: {tool_name}")
 
         # Try to detect async search method
-        coro = getattr(tool, "search", None) or getattr(tool, "fetch", None) or getattr(tool, "search_posts", None)
+        coro = (
+            getattr(tool, "search", None) or 
+            getattr(tool, "fetch", None) or 
+            getattr(tool, "search_posts", None) or
+            getattr(tool, "fetch_channel_recent", None) or
+            getattr(tool, "hashtag_search_recent", None) 
+        )
+        
         if coro is None:
             raise ToolExecutionError(f"Tool {tool_name} has no callable search/fetch method")
 
@@ -73,7 +83,8 @@ class TriageAgent:
         except Exception as e:
             raise ToolExecutionError(f"Tool {tool_name} error: {e}")
 
-    async def verify_incident(self, incident: Dict):
+    async def verify_incident(self, message:AgentMessage):
+        incident = message.payload
         triage = await self.classify_incident(incident)
         decision = await self.decide_tools(incident, triage)
         selected = decision.get("tools", [])
@@ -101,5 +112,5 @@ class TriageAgent:
                     continue
 
         # Send to aggregator (your aggregator should handle evidence shaping)
-        await self.aggregator.collect_evidence(incident, triage, results)
+        await self.aggregator.handle_aggregator(incident, triage, results)
         return {"triage": triage, "tool_results": results}

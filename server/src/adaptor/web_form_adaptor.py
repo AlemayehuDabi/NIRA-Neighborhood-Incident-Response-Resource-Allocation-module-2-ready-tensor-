@@ -7,6 +7,8 @@ def adapt_web_form(formData):
         "severity": formData.get('severity'),
         "description": formData.get('description'),
         "location": formData.get('location'),
-        "image_url": formData.get('uploaded_file').filename if formData.get('uploaded_file') else None       
+        "phone_number": formData.get("phone_number"),
+        "image": formData.get('image') if formData.get('image') else None,
+        "source": "web"      
     }
     

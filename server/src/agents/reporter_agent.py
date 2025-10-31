@@ -10,7 +10,6 @@ class ReporterAgent:
         self.geo_coding_tool = GeoCodingTool()
 
     def handle_incident(self, incident_payload: dict):
-        # You can add enrichment here (geocoding, timestamp already included, image handling)
         
         location_txt = incident_payload.get("location")
         

@@ -1,15 +1,21 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from src.adaptor.web_form_adaptor import adapt_web_form
 from src.adaptor.sms_adaptor import adapt_sms
-from src.adaptor.whatup_adaptor import adapt_whatsapp
 from src.agents.reporter_agent import ReporterAgent
 from pydantic import BaseModel
 from typing import Optional
 import cloudinary
 import os
 from dotenv import load_dotenv
+from src.agents.triage_agent import TriageAgent
+from src.tools.registry import ToolRegistry
 
 load_dotenv()
+
+# get all register tools
+registry = ToolRegistry()
+
+tools = registry.all()
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -29,10 +35,17 @@ class IncidentWebPayload(BaseModel):
 class IncidentSMSPayload(BaseModel):
     sms_text: str
     phone_number: str
+    
+
+    
+# triage agent
+triage = TriageAgent(tool_registry=tools)
 
 def send_to_triage(message):
     print("Sending to Triage Agent:", message)
+    
     # sending message to triage agent
+    triage.verify_incident(message)
 
 # reporter agent
 reporter = ReporterAgent(send_to_triage)  
@@ -54,7 +67,7 @@ async def submit_sms_incident(data: IncidentSMSPayload):
     message = reporter.handle_incident(payload)
     return {"status": "received", "report_id": payload["id"], "payload": payload}
 
-# Cloudinary 
+# Cloudinary
 @router.post('/upload-image')
 async def upload_image(file: UploadFile= File(...)):
     try:
