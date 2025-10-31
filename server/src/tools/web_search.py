@@ -1,29 +1,30 @@
+import os
+from src.tools._common import async_client, retry_network
 from typing import List, Dict
-import requests
 
-class GoogleSearchTool:
-    def __init__(self, api, cx):
-        self.api = api
-        self.cx = cx
-        
-    def search(self, query: str, num: int = 5) -> List[Dict]:
-        url = "https://www.googleapis.com/customsearch/v1"
-        params = {"key": self.api, "cx":self.cx,  "q": query, "num": num }
-        resp = requests.get(url, params=params)
-        results = resp.json().get("items", [])
-        return [{"title": r["title"], "link": r["link"], "snippet": r["snippet"]} for r in results]
-    
-    
-class BinSearchTool:
-    def __init__(self, api, cx):
-        self.api = api
-        self.cx = cx
-        
-    def search(self, query:str, num:int=5) -> List[dict]:
-        url = f"https://api.bing.microsoft.com/v7.0/search?q={query}&count={num}"
-        headers = {"Ocp-Apim-Subscription-Key": self.api_key}
-        resp = requests.get(url, headers=headers)
-        results = resp.json().get("webPages", {}).get("value", [])
-        return [{"title": r["name"], "link": r["url"], "snippet": r["snippet"]} for r in results]
-    
-    
+class SerpAPITool:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base = "https://serpapi.com/search.json"
+
+    @retry_network()
+    async def search(self, q: str, num: int = 5, engine: str = "google") -> List[Dict]:
+        params = {
+            "q": q,
+            "api_key": self.api_key,
+            "engine": engine,
+            "num": num,
+        }
+        r = await async_client.get(self.base, params=params)
+        r.raise_for_status()
+        data = r.json()
+        # Normalize common fields (engine-specific fields vary)
+        results = []
+        for item in data.get("organic_results", [])[:num]:
+            results.append({
+                "title": item.get("title"),
+                "link": item.get("link"),
+                "snippet": item.get("snippet") or item.get("snippet_html"),
+                "source": item.get("displayed_link") or item.get("link")
+            })
+        return results
