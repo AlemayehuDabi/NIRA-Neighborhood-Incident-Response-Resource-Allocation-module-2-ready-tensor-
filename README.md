@@ -88,7 +88,6 @@ These metrics are automatically computed during replayed simulations using synth
                          |
                 [Verification Supervisor]
      ┌──────────┬─────────┬─────────┬─────────┐
-     |          |         |         |         |
 [Web Search] [Social] [Image] [Metadata] [Crowd/Local]
      |          |         |         |         |
         Evidence DB (S3 + Postgres + Vector)
