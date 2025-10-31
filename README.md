@@ -91,7 +91,7 @@ These metrics are automatically computed during replayed simulations using synth
      |          |         |         |         |
 [Web Search] [Social] [Image] [Metadata] [Crowd/Local]
      |          |         |         |         |
-        --> Evidence DB (S3 + Postgres + Vector)
+        Evidence DB (S3 + Postgres + Vector)
                          |
                 [Credibility Aggregator]
           Bayesian truth score 0 → 1
