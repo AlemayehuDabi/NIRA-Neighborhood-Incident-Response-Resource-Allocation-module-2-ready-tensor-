@@ -1,7 +1,7 @@
-import { Form } from './Form';
+import { IncidentReportForm } from './Form';
 
 function App() {
-  return <Form />;
+  return <IncidentReportForm />;
 }
 
 export default App;
