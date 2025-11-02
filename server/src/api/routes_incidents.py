@@ -35,9 +35,8 @@ class IncidentWebPayload(BaseModel):
 class IncidentSMSPayload(BaseModel):
     sms_text: str
     phone_number: str
-    
 
-    
+
 # triage agent
 triage = TriageAgent(tool_registry=tools)
 
