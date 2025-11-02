@@ -50,10 +50,15 @@ class AggregatorAgent:
         """
         
         resp = await self.llm(prompt)
-        if  resp.get("confidence") > 0.5:
+        if  resp.get("confidence") > 0.3:
             # call dispatcher agent
-            return resp
+            return {
+                "is_confident": True,
+                "response": resp
+            }
         else:
-            # human in loop
-            return resp
+            # human in loop but for now cease
+            return {
+                "is_confident": False,
+            }
             

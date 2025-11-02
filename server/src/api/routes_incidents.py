@@ -43,7 +43,6 @@ triage = TriageAgent(tool_registry=tools)
 
 def send_to_triage(message):
     print("Sending to Triage Agent:", message)
-    
     # sending message to triage agent
     triage.verify_incident(message)
 
@@ -57,7 +56,7 @@ async def submit_web_incident(payload: IncidentWebPayload):
     payload = adapt_web_form(payload_dict)
     print("payload", payload)
     message = reporter.handle_incident(payload)
-    return {"status": "received", "report_id": payload["id"]}
+    return {"status": "received", "report_id": payload["id"], "message": "geolocation done", "recevied_message": "web"}
 
 # SMS endpoint
 @router.post("/submit_sms_incident")
@@ -65,7 +64,7 @@ async def submit_sms_incident(data: IncidentSMSPayload):
     print("sms payload", data.sms_text, data.phone_number)
     payload = adapt_sms(data.sms_text, data.phone_number)
     message = reporter.handle_incident(payload)
-    return {"status": "received", "report_id": payload["id"], "payload": payload}
+    return {"status": "received", "report_id": payload["id"], "message": "geolocation done", "recevied_method": "sms"}
 
 # Cloudinary
 @router.post('/upload-image')

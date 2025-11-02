@@ -1,4 +1,55 @@
+import { useState } from 'react';
+
+type categoryEnum =
+  | 'Fire'
+  | 'Crime'
+  | 'Medical'
+  | 'Accident'
+  | 'Flood'
+  | 'Other';
+type severityEnum = 'Critical' | 'High' | 'Medium' | 'Low';
+
+interface IncidentForm {
+  description: string;
+  category: categoryEnum;
+  severity: severityEnum;
+  location: string;
+  uploadedFile?: File;
+}
+
 export function IncidentReportForm() {
+  const [incident, setIncident] = useState<IncidentForm>({
+    description: '',
+    category: 'Fire',
+    severity: 'Critical',
+    location: '',
+  });
+
+  const reportIncident = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/submit_web_incident', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer your_auth_token_here',
+        },
+        body: '',
+      });
+
+      const data = await res.json();
+      console.log('form data', data);
+    } catch (error) {
+      console.log('form error', error);
+    }
+  };
+
+  const handleChange = (e: any) => {
+    setIncident({
+      ...incident,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="bg-white/70 backdrop-blur-lg shadow-2xl rounded-3xl p-10 w-full max-w-xl space-y-6 border border-white/40">
@@ -19,6 +70,9 @@ export function IncidentReportForm() {
               rows={4}
               placeholder="Describe what happened..."
               required
+              value={incident.description}
+              onChange={handleChange}
+              name="description"
             ></textarea>
           </div>
 
@@ -30,6 +84,8 @@ export function IncidentReportForm() {
               <select
                 className="w-full p-3 rounded-xl border bg-white border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none shadow-sm"
                 required
+                onChange={handleChange}
+                name="category"
               >
                 <option>Fire</option>
                 <option>Crime</option>
@@ -47,6 +103,8 @@ export function IncidentReportForm() {
               <select
                 className="w-full p-3 rounded-xl border bg-white border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none shadow-sm"
                 required
+                onChange={handleChange}
+                name="severity"
               >
                 <option>Critical</option>
                 <option>High</option>
@@ -64,6 +122,8 @@ export function IncidentReportForm() {
               className="w-full p-3 rounded-xl border bg-white/60 border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none shadow-sm"
               placeholder="City, Street, Landmark"
               required
+              onChange={handleChange}
+              name="location"
             />
           </div>
 
@@ -75,13 +135,15 @@ export function IncidentReportForm() {
               type="file"
               className="w-full border rounded-xl p-3 bg-white border-gray-300 shadow-sm cursor-pointer"
               accept="image/*"
-              required
+              onChange={handleChange}
+              name="uploadedFile"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold p-3 rounded-xl hover:shadow-xl hover:scale-[1.02] transition-all"
+            className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold p-3 rounded-xl hover:shadow-xl hover:scale-[1.02] transition-all"
+            onClick={() => reportIncident()}
           >
             Submit Report
           </button>
