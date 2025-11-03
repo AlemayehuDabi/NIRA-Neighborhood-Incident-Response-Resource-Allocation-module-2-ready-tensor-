@@ -9,6 +9,13 @@ class SourceEnum(str, enum.Enum):
     SMS = "SMS"
     WEB = "WEB"
     WHATSAPP = "WHATSAPP"
+    
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+    email = Column(String)
+    password = Column(String)
 
 class Incident(Base):
     __tablename__ = 'incident'

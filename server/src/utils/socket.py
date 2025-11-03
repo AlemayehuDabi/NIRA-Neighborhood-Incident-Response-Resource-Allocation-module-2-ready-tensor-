@@ -4,6 +4,7 @@ ADMIN_ROOM = "admins"
 CLIENT_ROOM = "clients"
 
 # socket io
+
 # ✅ Identify user role & join a room
 @sio.event()
 async def join_room(sid, data):
