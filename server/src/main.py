@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.api.routes_incidents import router
+from src.api.routes_auth import router
 from src.tools.registry import ToolRegistry
 from src.tools.web_search import SerpAPITool
 from src.tools.social_media import TelegramTool, TwitterTool, FacebookTool,InstagramTool

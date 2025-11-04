@@ -10,17 +10,14 @@ class SourceEnum(str, enum.Enum):
     WEB = "WEB"
     WHATSAPP = "WHATSAPP"
     
-class RoleEnum(str,enum.Enum):
-    USER = "USER"
-    ADMIN = "ADMIN"
-    
+# user is always admin
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     email = Column(String)
     password = Column(String)
-    role=Column(Enum(RoleEnum), default=SourceEnum.USER)
+    role=Column(String, default="ADMIN")
 
 class Incident(Base):
     __tablename__ = 'incident'
