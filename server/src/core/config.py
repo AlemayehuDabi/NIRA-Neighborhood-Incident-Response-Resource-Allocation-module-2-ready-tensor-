@@ -8,7 +8,10 @@ class Settings(BaseSettings):
         env_file = ".env"  # tells Pydantic to load from .env
 
 # @lru_cache()  # cache settings to avoid reloading multiple times
-def get_settings():
-    return Settings()
+# def get_settings():
+#     return Settings()
 
-settings = get_settings()
+# settings = get_settings()
+
+# avoid cache for development
+settings = Settings()
