@@ -8,11 +8,11 @@ from src.utils.hash_verify import hashPassword
 router  = APIRouter()      
            
 # no auth for citizen
-@router.post("/register", response_model=UserResponse)    
+@router.post("/register")    
 def register(data:Register, db:Session = Depends(get_db)):
    is_user_exist = db.query(User).filter(data.email == User.email).first()
    if is_user_exist:
-      return HTTPException(400, "user exist")
+      raise HTTPException(400, "user exist")
    
    hashed_password = hashPassword(data.password)
       
