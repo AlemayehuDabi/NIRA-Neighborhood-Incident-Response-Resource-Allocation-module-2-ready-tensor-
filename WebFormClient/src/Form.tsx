@@ -33,10 +33,13 @@ export function IncidentReportForm() {
           'Content-Type': 'application/json',
           Authorization: 'Bearer your_auth_token_here',
         },
-        body: '',
+        body: JSON.stringify({}),
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message || 'Submit Incident failed');
+      }
       console.log('form data', data);
     } catch (error) {
       console.log('form error', error);

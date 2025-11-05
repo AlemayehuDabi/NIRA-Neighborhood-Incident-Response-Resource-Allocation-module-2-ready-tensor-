@@ -1,25 +1,45 @@
+import { useState } from 'react';
+
+interface Login {
+  email: string;
+  password: string;
+}
+
 export const SignIn = () => {
+  const [loginInfo, setLoginInfo] = useState<Login>({
+    email: '',
+    password: '',
+  });
+
   const handleLogin = async () => {
     try {
       const res = await fetch('http://localhost:8000/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          token: `Bearer token_here`,
+          Authorization: `Bearer token_here`,
         },
-        body: '',
+        body: JSON.stringify({
+          email: loginInfo.email,
+          password: loginInfo.password,
+        }),
       });
 
-      const data = res.json();
+      const data = await res.json();
 
-      if (!data) {
-        return console.log('error', data);
+      if (!res.ok) {
+        console.log(data.message || 'Login failed');
+        return;
       }
 
-      console.log('sign in data', data);
+      console.log('Login success:', data);
     } catch (error) {
       console.log('signin error', error);
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoginInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -37,6 +57,7 @@ export const SignIn = () => {
               type="email"
               placeholder="Enter your email"
               className="w-full mt-1 px-4 py-3 bg-[#0d1320] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
+              onChange={(e) => handleChange(e)}
             />
           </div>
 
@@ -47,6 +68,7 @@ export const SignIn = () => {
               type="password"
               placeholder="Enter your password"
               className="w-full mt-1 px-4 py-3 bg-[#0d1320] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
+              onChange={(e) => handleChange(e)}
             />
           </div>
 
