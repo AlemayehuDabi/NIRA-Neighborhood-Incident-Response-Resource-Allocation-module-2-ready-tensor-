@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<SignIn />} path="/sign-in" />
+        <Route element={<SignIn />} path="/login" />
         <Route element={<ProtectedRoutes />}>
           <Route element={<ERAdminDashboard />} path="/" />
         </Route>

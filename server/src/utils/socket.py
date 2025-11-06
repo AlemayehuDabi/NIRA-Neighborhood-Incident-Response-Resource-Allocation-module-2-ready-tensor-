@@ -21,6 +21,7 @@ async def join_room(sid, data):
         await sio.emit("client_connected", {"message": "Citizen Online"}, room=sio)
 
 # ✅ Citizen reports new incident -> send to admins
+# this will be used after the agents completed there job.
 @sio.event
 async def report_incident(sid, incident_data):
     print(f"🚨 New incident: {incident_data}")

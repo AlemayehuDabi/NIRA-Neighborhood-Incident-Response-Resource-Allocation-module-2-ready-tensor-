@@ -14,7 +14,7 @@ export interface Incident {
   timestamp: string;
 }
 
-const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const socketUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:8000';
 let socket: Socket;
 
 export default function App() {
