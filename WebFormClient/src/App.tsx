@@ -1,5 +1,5 @@
 import ProtectedRoutes from './auth/protectedRoute';
-import Register from './auth/register';
+import { Register } from './auth/register';
 import { SignIn } from './auth/signin';
 import Dashboard from './Dashborad/page';
 import { IncidentReportForm } from './Form';

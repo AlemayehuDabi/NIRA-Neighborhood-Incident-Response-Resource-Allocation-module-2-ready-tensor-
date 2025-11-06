@@ -48,20 +48,18 @@ export const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] px-4">
-      <div className="w-full max-w-md bg-[#111827] rounded-xl p-8 shadow-2xl border border-[#1f2937]">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          Sign In
-        </h2>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-xl p-8 shadow-2xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
 
         <form className="space-y-5">
           {/* Email */}
           <div>
-            <label className="text-gray-300 text-sm">Email</label>
+            <label className="text-gray-600 text-sm">Email</label>
             <input
               type="email"
               placeholder="Enter your email"
-              className="w-full mt-1 px-4 py-3 bg-[#0d1320] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
+              className="w-full mt-1 px-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
               onChange={(e) => handleChange(e)}
               required
             />
@@ -69,11 +67,11 @@ export const SignIn = () => {
 
           {/* Password */}
           <div>
-            <label className="text-gray-300 text-sm">Password</label>
+            <label className="text-gray-600 text-sm">Password</label>
             <input
               type="password"
               placeholder="Enter your password"
-              className="w-full mt-1 px-4 py-3 bg-[#0d1320] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
+              className="w-full mt-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
               onChange={(e) => handleChange(e)}
               required
             />
