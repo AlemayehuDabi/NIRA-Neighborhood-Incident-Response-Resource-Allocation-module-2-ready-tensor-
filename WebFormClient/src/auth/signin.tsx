@@ -11,12 +11,15 @@ export const SignIn = () => {
     password: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:8000/login', {
+      setLoading(true);
+      const res = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +43,8 @@ export const SignIn = () => {
       alert('User Successfully Logined In!');
     } catch (error) {
       console.log('signin error', error);
+    } finally {
+      setLoading(true);
     }
   };
 
@@ -58,6 +63,7 @@ export const SignIn = () => {
             <label className="text-gray-600 text-sm">Email</label>
             <input
               type="email"
+              name="email"
               placeholder="Enter your email"
               className="w-full mt-1 px-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
               onChange={(e) => handleChange(e)}
@@ -70,6 +76,7 @@ export const SignIn = () => {
             <label className="text-gray-600 text-sm">Password</label>
             <input
               type="password"
+              name="password"
               placeholder="Enter your password"
               className="w-full mt-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#2D3EF7] focus:outline-none"
               onChange={(e) => handleChange(e)}
@@ -83,14 +90,14 @@ export const SignIn = () => {
             className="w-full bg-[#2D3EF7] hover:bg-[#1e2acb] transition text-white py-3 rounded-lg font-semibold"
             onClick={(e) => handleLogin(e)}
           >
-            Sign In
+            {loading ? 'Submitting...' : 'Sign In'}
           </button>
         </form>
 
         {/* Footer */}
         <p className="text-gray-400 text-sm mt-6 text-center">
           Don’t have an account?{' '}
-          <a href="#" className="text-[#2D3EF7] hover:underline">
+          <a href="/register" className="text-[#2D3EF7] hover:underline">
             Create one
           </a>
         </p>

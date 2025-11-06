@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from src.api.routes_incidents import router
-from src.api.routes_auth import router
+from src.api.routes_incidents import router as incidents_router
+from src.api.routes_auth import router as auth_router
 from src.tools.registry import ToolRegistry
 from src.tools.web_search import SerpAPITool
 from src.tools.social_media import TelegramTool, TwitterTool, FacebookTool,InstagramTool
@@ -51,4 +51,6 @@ registry.register("facebook", FacebookTool(access_token="FB_TOKEN"))
 registry.register("instagram", InstagramTool(access_token="IG_TOKEN", user_id="INST_USER_ID"))
 registry.register("telegram", TelegramTool(bot_token="TELEGRAM_BOT_TOKEN"))
 
-fastapi_app.include_router(router)
+# ✅ Include both routers with prefixes (optional but recommended)
+fastapi_app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+fastapi_app.include_router(incidents_router, prefix="/incidents", tags=["Incidents"])

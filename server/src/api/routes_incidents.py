@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from src.adaptor.web_form_adaptor import adapt_web_form
 from src.adaptor.sms_adaptor import adapt_sms
 from src.agents.reporter_agent import ReporterAgent
@@ -40,6 +40,7 @@ class IncidentSMSPayload(BaseModel):
 # triage agent
 triage = TriageAgent(tool_registry=tools)
 
+# replace by langgraph later
 def send_to_triage(message):
     print("Sending to Triage Agent:", message)
     # sending message to triage agent
@@ -50,8 +51,21 @@ reporter = ReporterAgent(send_to_triage)
     
 # Web form endpoint
 @router.post("/submit_web_incident")
-async def submit_web_incident(payload: IncidentWebPayload):
-    payload_dict = payload.dict()
+async def submit_web_incident( 
+                            #   payload: IncidentWebPayload
+                              description: str = Form(...),
+    location: str = Form(...),
+    category: str = Form(...),
+    severity: str = Form(...),
+    uploaded_file: UploadFile = File(None)):
+    payload_dict = {
+        "description": description,
+        "location": location,
+        "category": category,
+        "severity": severity,
+        "image_url": uploaded_file
+    }
+    # payload_dict = payload.dict()
     payload = adapt_web_form(payload_dict)
     print("payload", payload)
     message = reporter.handle_incident(payload)

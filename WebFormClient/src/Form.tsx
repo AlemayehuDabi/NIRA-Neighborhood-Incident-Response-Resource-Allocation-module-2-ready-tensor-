@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ReportModal } from './ui/Modal/ReportModal';
 
 type categoryEnum =
   | 'Fire'
@@ -17,6 +18,13 @@ interface IncidentForm {
   uploadedFile?: File;
 }
 
+export interface ReportMessage {
+  message: string;
+  recevied_message: string;
+  report_id: string;
+  status: string;
+}
+
 export function IncidentReportForm() {
   const [incident, setIncident] = useState<IncidentForm>({
     description: '',
@@ -25,32 +33,79 @@ export function IncidentReportForm() {
     location: '',
   });
 
-  const reportIncident = async () => {
+  const [loading, setLoading] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  // recived modal
+  const [incidentRespData, setincidentRespData] = useState<ReportMessage>({
+    message: '',
+    recevied_message: '',
+    report_id: '',
+    status: '',
+  });
+
+  const reportIncident = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     try {
-      const res = await fetch('http://localhost:8000/submit_web_incident', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer your_auth_token_here',
-        },
-        body: JSON.stringify({}),
-      });
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append('description', incident.description);
+      formData.append('location', incident.location);
+      formData.append('category', incident.category);
+      formData.append('severity', incident.severity);
+      if (incident.uploadedFile) {
+        formData.append('uploadedFile', incident.uploadedFile);
+      }
+
+      console.log('Submitting Incident:', Object.fromEntries(formData));
+
+      const res = await fetch(
+        'http://localhost:8000/incidents/submit_web_incident',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer your_auth_token_here',
+          },
+          body: formData,
+        }
+      );
 
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message || 'Submit Incident failed');
       }
       console.log('form data', data);
+      setOpen(true);
+      setincidentRespData(data);
     } catch (error) {
       console.log('form error', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleChange = (e: any) => {
-    setIncident({
-      ...incident,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value, files } = e.target as HTMLInputElement;
+
+    if (name === 'uploadedFile' && files) {
+      setIncident((prev) => ({
+        ...prev,
+        uploadedFile: files[0],
+      }));
+    } else {
+      setIncident((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   // token
@@ -166,13 +221,19 @@ export function IncidentReportForm() {
             <button
               type="submit"
               className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold p-3 rounded-xl hover:shadow-xl hover:scale-[1.02] transition-all"
-              onClick={() => reportIncident()}
+              onClick={(e) => reportIncident(e)}
             >
-              Submit Report
+              {loading ? 'Submit' : 'Submit Report'}
             </button>
           </form>
         </div>
       </div>
+
+      <ReportModal
+        data={incidentRespData}
+        isOpen={open}
+        onClose={() => setOpen(false)}
+      />
     </>
   );
 }
