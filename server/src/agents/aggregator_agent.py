@@ -1,11 +1,21 @@
 from src.llm.google_llm import llm_tool
+from src.core.message_schema import AgentMessage
 
 class AggregatorAgent:
     def __init__(self):
         self.llm = llm_tool()
         
-        # take the main incident, classified triage and the search result
-    async def handle_aggregator(self, incident, triage, results):
+    async def handle_aggregator(self, state:AgentMessage):
+        # extraction
+        incident = getattr(state, "incident", None)
+        triage = getattr(state, "triage", None)
+        results = getattr(state, "results", None)
+
+        # Defensive check
+        if not all([incident, triage, results]):
+            raise ValueError("AggregatorAgent missing required fields (incident, triage, results)")
+
+        
         """
         aggeregator calls llm and conclude the result
         """
@@ -52,13 +62,24 @@ class AggregatorAgent:
         resp = await self.llm(prompt)
         if  resp.get("confidence") > 0.3:
             # call dispatcher agent
-            return {
-                "is_confident": True,
-                "response": resp
-            }
+            message = AgentMessage(
+                is_confidence=True,
+                aggregator_message=resp
+            )
+            # return {
+            #     "is_confident": True,
+            #     "aggregator_message": resp
+            # }
+            return message
         else:
             # human in loop but for now cease
-            return {
-                "is_confident": False,
-            }
+            message = AgentMessage(
+                is_confidence=False,
+                aggregator_message=resp
+            )
+            # return {
+            #     "is_confident": False,
+            #     "aggregator_message": resp
+            # }
+            return message
             

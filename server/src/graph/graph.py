@@ -4,6 +4,7 @@ from src.agents.triage_agent import TriageAgent
 from src.agents.aggregator_agent import AggregatorAgent
 from src.agents.dispatcher_agent import DispatcherAgent
 from langgraph.checkpoint.memory import MemorySaver
+from src.core.message_schema import AgentMessage
 
 # Instantiate agents
 reporter = ReporterAgent()
@@ -11,15 +12,9 @@ triage = TriageAgent()
 aggregator = AggregatorAgent()
 dispatcher = DispatcherAgent()
 
-# Define state class
-class MessageTransfer:
-    incident: list[dict]
-    confidence: int
-    report_id: int
-    recieved_message: str
 
 def create_graph():
-    graph = StateGraph(MessageTransfer)
+    graph = StateGraph(AgentMessage)
 
     # Add agents (nodes)
     graph.add_node("reporter_agent", reporter.handle_incident)

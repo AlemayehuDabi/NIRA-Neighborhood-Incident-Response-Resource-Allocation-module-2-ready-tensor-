@@ -1,11 +1,14 @@
-from src.core.message_schema import AgentMessage as IncidentMessage
+from src.core.message_schema import AgentMessage
 from src.tools.geocode import GeoCodingTool
+from src.core.message_schema import AgentMessage
 
 class ReporterAgent:
     def __init__(self):
         self.geo_coding_tool = GeoCodingTool()
 
-    def handle_incident(self, incident_payload: dict):
+    def handle_incident(self, state: AgentMessage):
+        
+        incident_payload = state
         
         location_txt = incident_payload.get("location")
         
@@ -15,12 +18,14 @@ class ReporterAgent:
         incident_payload['latitude'] = geo.get("latitude")
         incident_payload["normalized_address"] = geo.get("normalized_adress")
         
-        message = IncidentMessage(
+        message = AgentMessage(
             sender="ReporterAgent",
             recipient="TriageAgent",
             intent="new_incident",
             payload=incident_payload,
-            confidence=1.0
+            confidence=1.0,
+            report_id=incident_payload["id"],
+            recieved_message=incident_payload["source"]
         )
         
         return message

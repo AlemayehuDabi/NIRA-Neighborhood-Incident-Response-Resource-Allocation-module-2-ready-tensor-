@@ -83,8 +83,8 @@ class TriageAgent:
         except Exception as e:
             raise ToolExecutionError(f"Tool {tool_name} error: {e}")
 
-    async def verify_incident(self, message:AgentMessage):
-        incident = message.payload
+    async def verify_incident(self, state: AgentMessage):
+        incident = state.payload
         triage = await self.classify_incident(incident)
         decision = await self.decide_tools(incident, triage)
         selected = decision.get("tools", [])
@@ -110,8 +110,19 @@ class TriageAgent:
                     break
                 except Exception:
                     continue
-
+        
+        # return the incident, triage, and results from verifier agent so langgraph use it
+        message = AgentMessage(
+            sender="TriageAgent",
+            recipient="AggregatorAgent",
+            intent="verified_incident",
+            # same payload,id,confidence,recieved_message
+            tool_results=results
+        )
+        
+        return message
+                    
         # Send to aggregator (your aggregator should handle evidence shaping)
-        aggregatorResp = await self.aggregator.handle_aggregator(incident, triage, results)
-        print("aggregator response", aggregatorResp)
-        return {"triage": triage, "tool_results": results, "message": "triage agent done"}
+        # aggregatorResp = await self.aggregator.handle_aggregator(incident, triage, results)
+        # print("aggregator response", aggregatorResp)
+        # return {"triage": triage, "tool_results": results, "message": "triage agent done"}
