@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 from src.agents.triage_agent import TriageAgent
 from src.tools.registry import ToolRegistry
+from src.graph.graph import create_graph
 
 load_dotenv()
 
@@ -37,18 +38,21 @@ class IncidentSMSPayload(BaseModel):
     phone_number: str
 
 
-# triage agent
-triage = TriageAgent(tool_registry=tools)
+# graph
+graph = create_graph()
 
-# replace by langgraph later
-def send_to_triage(message):
-    print("Sending to Triage Agent:", message)
-    # sending message to triage agent
-    resp = triage.verify_incident(message)
-    print("verification triage agent", resp)
+# triage agent
+# triage = TriageAgent(tool_registry=tools)
+
+# # replace by langgraph later
+# def send_to_triage(message):
+#     print("Sending to Triage Agent:", message)
+#     # sending message to triage agent
+#     resp = triage.verify_incident(message)
+#     print("verification triage agent", resp)
 
 # reporter agent
-reporter = ReporterAgent()  
+# reporter = ReporterAgent()  
     
 # Web form endpoint
 @router.post("/submit_web_incident")
@@ -70,7 +74,9 @@ async def submit_web_incident(
     payload = adapt_web_form(payload_dict)
     print("payload", payload)
     # send to reporter agent
-    message = reporter.handle_incident(payload)
+    # message = reporter.handle_incident(payload)
+    # invoke the start of the graph
+    message = graph.ainvoke(payload)
     print("data from reporter agent handle_incident", message)
     return {"status": "pending", "report_id": payload["id"], "message": "Incident Reported", "recevied_message": "web"}
 
@@ -79,7 +85,8 @@ async def submit_web_incident(
 async def submit_sms_incident(data: IncidentSMSPayload):
     print("sms payload", data.sms_text, data.phone_number)
     payload = adapt_sms(data.sms_text, data.phone_number)
-    message = reporter.handle_incident(payload)
+    # message = reporter.handle_incident(payload)
+    message = graph.ainvoke(payload)
     return {"status": "received", "report_id": payload["id"], "message": "Incident Reported", "recevied_method": "sms"}
 
 # Cloudinary
