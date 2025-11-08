@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ReportModal } from './ui/Modal/ReportModal';
+import { ClipLoader } from 'react-spinners';
 
 type categoryEnum =
   | 'Fire'
@@ -223,7 +224,18 @@ export function IncidentReportForm() {
               className="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold p-3 rounded-xl hover:shadow-xl hover:scale-[1.02] transition-all"
               onClick={(e) => reportIncident(e)}
             >
-              {loading ? 'Submit' : 'Submit Report'}
+              {loading ? (
+                <ClipLoader
+                  color="white"
+                  loading={loading}
+                  // cssOverride={override}
+                  size={20}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                'Report'
+              )}
             </button>
           </form>
         </div>

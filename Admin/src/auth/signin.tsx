@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 
 interface Login {
   email: string;
@@ -92,7 +93,18 @@ export const SignIn = () => {
             className="w-full bg-[#2D3EF7] hover:bg-[#1e2acb] transition text-white py-3 rounded-lg font-semibold"
             onClick={(e) => handleLogin(e)}
           >
-            {loading ? 'Submit' : 'Sign In'}
+            {loading ? (
+              <ClipLoader
+                color="white"
+                loading={loading}
+                // cssOverride={override}
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
       </div>
