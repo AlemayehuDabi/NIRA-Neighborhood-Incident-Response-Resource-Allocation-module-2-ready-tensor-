@@ -114,11 +114,11 @@ export function IncidentReportForm() {
 
   return (
     <>
-      {!token ? (
+      {!token && (
         <div className="w-full border-2 border-red-600 bg-red-300 py-1">
           <div className="flex justify-center items-center">
             <p>
-              If you want to track the progress of your incident{' '}
+              If you want to track the progress of the incident{' '}
               <a
                 href="/login"
                 className="text-gray-700 hover:border-b-2 hover:border-red-500 hover:text-gray-500"
@@ -128,7 +128,7 @@ export function IncidentReportForm() {
             </p>
           </div>
         </div>
-      ) : null}
+      )}
       <div className="flex items-center justify-center min-h-screen p-4">
         <div className="bg-white/70 backdrop-blur-lg shadow-2xl rounded-3xl p-10 w-full max-w-xl space-y-6 border border-white/40">
           <h2 className="text-3xl font-extrabold text-gray-800 text-center drop-shadow-sm">

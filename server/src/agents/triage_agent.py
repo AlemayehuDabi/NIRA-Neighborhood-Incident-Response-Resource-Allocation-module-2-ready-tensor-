@@ -112,5 +112,6 @@ class TriageAgent:
                     continue
 
         # Send to aggregator (your aggregator should handle evidence shaping)
-        await self.aggregator.handle_aggregator(incident, triage, results)
+        aggregatorResp = await self.aggregator.handle_aggregator(incident, triage, results)
+        print("aggregator response", aggregatorResp)
         return {"triage": triage, "tool_results": results, "message": "triage agent done"}

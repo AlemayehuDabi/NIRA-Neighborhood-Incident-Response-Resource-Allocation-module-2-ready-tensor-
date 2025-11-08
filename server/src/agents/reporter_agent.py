@@ -2,11 +2,7 @@ from src.core.message_schema import AgentMessage as IncidentMessage
 from src.tools.geocode import GeoCodingTool
 
 class ReporterAgent:
-    def __init__(self, orchestrator_send_function):
-        """
-        orchestrator_send_function: function to send message to TriageAgent (LangGraph node)
-        """
-        self.send_to_triage = orchestrator_send_function
+    def __init__(self):
         self.geo_coding_tool = GeoCodingTool()
 
     def handle_incident(self, incident_payload: dict):
@@ -27,6 +23,4 @@ class ReporterAgent:
             confidence=1.0
         )
         
-        # Send to orchestration layer
-        self.send_to_triage(message)
         return message

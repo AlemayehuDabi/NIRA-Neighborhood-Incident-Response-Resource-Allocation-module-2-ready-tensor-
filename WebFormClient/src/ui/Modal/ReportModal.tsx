@@ -9,6 +9,8 @@ interface ModalProps {
 export const ReportModal = ({ data, isOpen, onClose }: ModalProps) => {
   if (!isOpen) return null;
 
+  const token = localStorage.getItem('token');
+
   return (
     <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
@@ -60,13 +62,29 @@ export const ReportModal = ({ data, isOpen, onClose }: ModalProps) => {
           </div>
         </div>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-4">
           <button
             onClick={onClose}
             className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
           >
             Close
           </button>
+          {!token && (
+            <div className="w-full border-2 border-red-600 bg-red-300 py-1">
+              <div className="flex justify-center items-center">
+                <p>
+                  If you want to track the progress of the incident{' '}
+                  <a
+                    href="/login"
+                    className="text-gray-700 hover:border-b-2 hover:border-red-500 hover:text-gray-500"
+                  >
+                    sign in
+                  </a>{' '}
+                  and submit the incident again
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
